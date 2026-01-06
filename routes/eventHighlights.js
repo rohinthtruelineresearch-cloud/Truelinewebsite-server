@@ -20,12 +20,15 @@ router.get('/', async (req, res) => {
 // @desc    Create a new highlight
 // @access  Private (Admin)
 router.post('/', auth, async (req, res) => {
-  const { title, images } = req.body;
+  const { title, images, year, category, eventDate } = req.body;
 
   try {
     const newHighlight = new EventHighlight({
       title,
-      images // Expecting array of strings
+      images, // Expecting array of strings
+      year,
+      category,
+      eventDate
     });
 
     const highlight = await newHighlight.save();
@@ -40,7 +43,7 @@ router.post('/', auth, async (req, res) => {
 // @desc    Update a highlight
 // @access  Private (Admin)
 router.put('/:id', auth, async (req, res) => {
-  const { title, images } = req.body;
+  const { title, images, year, category, eventDate } = req.body;
 
   try {
     let highlight = await EventHighlight.findById(req.params.id);
@@ -48,6 +51,9 @@ router.put('/:id', auth, async (req, res) => {
 
     highlight.title = title || highlight.title;
     highlight.images = images || highlight.images;
+    highlight.year = year || highlight.year;
+    highlight.category = category || highlight.category;
+    highlight.eventDate = eventDate || highlight.eventDate;
 
     await highlight.save();
     res.json(highlight);
